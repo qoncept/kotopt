@@ -5,7 +5,7 @@ sealed class Optional<out T>: Collection<T>, Set<T>, List<T> {
     abstract fun <U> flatMap(transform: (T) -> Optional<U>): Optional<U>
     abstract fun <U> apply(transform: Optional<(T) -> U>): Optional<U>
 
-    class None<T>(): Optional<T>() {
+    class None<out T>(): Optional<T>() {
         override val value: T
             get() = throw NullPointerException()
 
@@ -28,7 +28,7 @@ sealed class Optional<out T>: Collection<T>, Set<T>, List<T> {
         override fun subList(fromIndex: Int, toIndex: Int): List<T> = emptyList<T>().subList(fromIndex, toIndex)
     }
 
-    class Some<T>(override val value: T): Optional<T>() {
+    class Some<out T>(override val value: T): Optional<T>() {
         override fun <U> map(transform: (T) -> U): Optional<U> = Some(transform(value))
         override fun <U> flatMap(transform: (T) -> Optional<U>): Optional<U> = transform(value)
         override fun <U> apply(transform: Optional<(T) -> U>): Optional<U> = transform.map { it(value) }
